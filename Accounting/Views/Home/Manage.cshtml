@@ -1,0 +1,70 @@
+﻿@using Accounting.ViewModels
+@using Kendo.Mvc.UI
+@model Accounting.ViewModels.ParametersSchemaViewModel
+
+@{
+    ViewBag.Title = "Manage page";
+}
+
+@section featured {
+    <section class="featured">
+        <div class="content-wrapper">
+            <hgroup class="title">
+                <h1>@ViewBag.Title.</h1>
+                <h2>@ViewBag.Message</h2>
+            </hgroup>
+        </div>
+    </section>
+}
+
+<script type="text/x-kendo-tmpl" id="allParametersItemTemplate">
+    <div class="parameter product-view k-widget">
+        <dl class="parametersInfo">
+            <dt>Name:</dt>
+            <dd>#:Name#</dd>
+            <dt>Input type:</dt>
+            <dd>#:Type#</dd>
+        </dl>
+        <div class="parametersListCommandButtons">
+            <button class="addButton">Add</button>
+        </div>
+    </div>
+</script>
+
+<script type="text/x-kendo-tmpl" id="schemaParametersItemTemplate">
+    <div class="parameter product-view k-widget">
+        <dl class="parametersInfo">
+            <dt>Name:</dt>
+            <dd>#:Name#</dd>
+            <dt>Input type:</dt>
+            <dd>#:Type#</dd>
+        </dl>
+        <div class="parametersListCommandButtons">
+            <button class="removeButton" onlick="onAddClick()">Remove</button>
+        </div>
+    </div>
+</script>
+
+<div id="parametersManager">
+    <p>Please, select additional parameters for the unload</p>
+    @using (Html.BeginForm("SetSchema", "Home", FormMethod.Post, new { enctype = "multipart/form-data"}))
+    {
+        <div>
+            @{
+                var counter = 0;
+                foreach (var vm in Model.Parameters)
+                {
+                    var bindingPrefix = "Parameters[" + counter + "].";
+                    <div>
+                        @Html.Hidden(bindingPrefix + "Id", vm.Id)
+                        @Html.CheckBox(bindingPrefix + "IsInSchema", vm.IsInSchema)
+                        @vm.Name (@vm.Type)
+                    </div>
+                    counter++;
+                }
+            }
+        </div>
+        
+        <p><button class="k-button" type="submit">Save</button></p>
+    }
+</div>

@@ -1,0 +1,67 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="Accounting.Data.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityContainer Name="AccountingDataStoreContainer">
+    <EntitySet Name="Items" EntityType="Accounting.Data.Store.Items" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Parameters" EntityType="Accounting.Data.Store.Parameters" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="ParameterValues" EntityType="Accounting.Data.Store.ParameterValues" store:Type="Tables" Schema="dbo" />
+    <AssociationSet Name="FK_ItemPropertyValue" Association="Accounting.Data.Store.FK_ItemPropertyValue">
+      <End Role="Items" EntitySet="Items" />
+      <End Role="ParameterValues" EntitySet="ParameterValues" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ParameterParameterValue" Association="Accounting.Data.Store.FK_ParameterParameterValue">
+      <End Role="Parameters" EntitySet="Parameters" />
+      <End Role="ParameterValues" EntitySet="ParameterValues" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="Items">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Number" Type="bigint" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Price" Type="decimal" Nullable="false" Precision="18" Scale="0" />
+  </EntityType>
+  <EntityType Name="Parameters">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Type" Type="int" Nullable="false" />
+    <Property Name="IsInSchema" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="ParameterValues">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="Value" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="ItemId" Type="bigint" Nullable="false" />
+    <Property Name="ParameterId" Type="bigint" Nullable="false" />
+  </EntityType>
+  <Association Name="FK_ItemPropertyValue">
+    <End Role="Items" Type="Accounting.Data.Store.Items" Multiplicity="1" />
+    <End Role="ParameterValues" Type="Accounting.Data.Store.ParameterValues" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Items">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="ParameterValues">
+        <PropertyRef Name="ItemId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ParameterParameterValue">
+    <End Role="Parameters" Type="Accounting.Data.Store.Parameters" Multiplicity="1" />
+    <End Role="ParameterValues" Type="Accounting.Data.Store.ParameterValues" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Parameters">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="ParameterValues">
+        <PropertyRef Name="ParameterId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema>

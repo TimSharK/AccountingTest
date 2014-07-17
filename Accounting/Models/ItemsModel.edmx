@@ -1,0 +1,207 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="Accounting.Data.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityContainer Name="AccountingDataStoreContainer">
+    <EntitySet Name="Items" EntityType="Accounting.Data.Store.Items" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Parameters" EntityType="Accounting.Data.Store.Parameters" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="ParameterValues" EntityType="Accounting.Data.Store.ParameterValues" store:Type="Tables" Schema="dbo" />
+    <AssociationSet Name="FK_ItemPropertyValue" Association="Accounting.Data.Store.FK_ItemPropertyValue">
+      <End Role="Items" EntitySet="Items" />
+      <End Role="ParameterValues" EntitySet="ParameterValues" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ParameterParameterValue" Association="Accounting.Data.Store.FK_ParameterParameterValue">
+      <End Role="Parameters" EntitySet="Parameters" />
+      <End Role="ParameterValues" EntitySet="ParameterValues" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="Items">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Number" Type="bigint" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Price" Type="decimal" Nullable="false" Precision="18" Scale="0" />
+  </EntityType>
+  <EntityType Name="Parameters">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Type" Type="int" Nullable="false" />
+    <Property Name="IsInSchema" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="ParameterValues">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="Value" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="ItemId" Type="bigint" Nullable="false" />
+    <Property Name="ParameterId" Type="bigint" Nullable="false" />
+  </EntityType>
+  <Association Name="FK_ItemPropertyValue">
+    <End Role="Items" Type="Accounting.Data.Store.Items" Multiplicity="1" />
+    <End Role="ParameterValues" Type="Accounting.Data.Store.ParameterValues" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Items">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="ParameterValues">
+        <PropertyRef Name="ItemId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ParameterParameterValue">
+    <End Role="Parameters" Type="Accounting.Data.Store.Parameters" Multiplicity="1" />
+    <End Role="ParameterValues" Type="Accounting.Data.Store.ParameterValues" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Parameters">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="ParameterValues">
+        <PropertyRef Name="ParameterId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="Accounting.Data" Alias="Self" p1:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:p1="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="ItemsDb" p1:LazyLoadingEnabled="true">
+          <EntitySet Name="Items" EntityType="Accounting.Data.Item" />
+          <EntitySet Name="Parameters" EntityType="Accounting.Data.Parameter" />
+          <EntitySet Name="ParameterValues" EntityType="Accounting.Data.ParameterValue" />
+          <AssociationSet Name="FK_ItemPropertyValue" Association="Accounting.Data.FK_ItemPropertyValue">
+            <End Role="Items" EntitySet="Items" />
+            <End Role="ParameterValues" EntitySet="ParameterValues" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ParameterParameterValue" Association="Accounting.Data.FK_ParameterParameterValue">
+            <End Role="Parameters" EntitySet="Parameters" />
+            <End Role="ParameterValues" EntitySet="ParameterValues" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Item">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="Number" Type="Int64" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="Price" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
+          <NavigationProperty Name="ParameterValues" Relationship="Accounting.Data.FK_ItemPropertyValue" FromRole="Items" ToRole="ParameterValues" />
+        </EntityType>
+        <EntityType Name="Parameter">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="Type" Type="Accounting.Data.PropertyType" Nullable="false" />
+          <NavigationProperty Name="ParameterValues" Relationship="Accounting.Data.FK_ParameterParameterValue" FromRole="Parameters" ToRole="ParameterValues" />
+          <Property Type="Boolean" Name="IsInSchema" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ParameterValue">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" />
+          <Property Name="Value" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="ItemId" Type="Int64" Nullable="false" />
+          <Property Name="ParameterId" Type="Int64" Nullable="false" />
+          <NavigationProperty Name="Items" Relationship="Accounting.Data.FK_ItemPropertyValue" FromRole="ParameterValues" ToRole="Items" />
+          <NavigationProperty Name="Parameters" Relationship="Accounting.Data.FK_ParameterParameterValue" FromRole="ParameterValues" ToRole="Parameters" />
+        </EntityType>
+        <Association Name="FK_ItemPropertyValue">
+          <End Role="Items" Type="Accounting.Data.Item" Multiplicity="1" />
+          <End Role="ParameterValues" Type="Accounting.Data.ParameterValue" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Items">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ParameterValues">
+              <PropertyRef Name="ItemId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ParameterParameterValue">
+          <End Role="Parameters" Type="Accounting.Data.Parameter" Multiplicity="1" />
+          <End Role="ParameterValues" Type="Accounting.Data.ParameterValue" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Parameters">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ParameterValues">
+              <PropertyRef Name="ParameterId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EnumType Name="PropertyType" a:ExternalTypeName="Accounting.Models.Types.PropertyType" xmlns:a="http://schemas.microsoft.com/ado/2006/04/codegeneration" >
+          <Member Name="Boolean" />
+          <Member Name="String" />
+          <Member Name="File" />
+          <Member Name="Number" />
+        </EnumType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+    <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="AccountingDataStoreContainer" CdmEntityContainer="ItemsDb">
+    <EntitySetMapping Name="Items">
+      <EntityTypeMapping TypeName="IsTypeOf(Accounting.Data.Item)">
+        <MappingFragment StoreEntitySet="Items">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Number" ColumnName="Number" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Price" ColumnName="Price" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Parameters">
+      <EntityTypeMapping TypeName="IsTypeOf(Accounting.Data.Parameter)">
+        <MappingFragment StoreEntitySet="Parameters">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Type" ColumnName="Type" />
+          <ScalarProperty Name="IsInSchema" ColumnName="IsInSchema" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ParameterValues">
+      <EntityTypeMapping TypeName="IsTypeOf(Accounting.Data.ParameterValue)">
+        <MappingFragment StoreEntitySet="ParameterValues">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Value" ColumnName="Value" />
+          <ScalarProperty Name="ItemId" ColumnName="ItemId" />
+          <ScalarProperty Name="ParameterId" ColumnName="ParameterId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping></edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="False" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Default" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

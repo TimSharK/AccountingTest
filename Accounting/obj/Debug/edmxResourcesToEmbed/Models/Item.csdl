@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema xmlns="http://schemas.microsoft.com/ado/2009/11/edm" xmlns:cg="http://schemas.microsoft.com/ado/2006/04/codegeneration" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" Namespace="Item" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" annotation:UseStrongSpatialTypes="false">
+  <EntityContainer Name="ItemContainer" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="ItemSet" EntityType="Item.Item" />
+    <EntitySet Name="PropertySet" EntityType="Item.Property" />
+  </EntityContainer>
+  <EntityType Name="Item">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Type="Int64" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Type="Int64" Name="Number" Nullable="false" />
+    <Property Type="String" Name="Name" Nullable="false" MaxLength="Max" />
+    <Property Type="Decimal" Name="Price" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Property">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Type="Int64" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Type="String" Name="Name" Nullable="false" />
+    <Property Type="Item.PropertyType" Name="Type" Nullable="false" />
+  </EntityType>
+  <EnumType Name="PropertyType" cg:ExternalTypeName="Accounting.PropertyType" />
+</Schema>

@@ -1,0 +1,94 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="Item.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityContainer Name="ItemStoreContainer">
+    <EntitySet Name="CurrentParametersSchema" EntityType="Item.Store.CurrentParametersSchema" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Items" EntityType="Item.Store.Items" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Parameters" EntityType="Item.Store.Parameters" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="ParameterValues" EntityType="Item.Store.ParameterValues" store:Type="Tables" Schema="dbo" />
+    <AssociationSet Name="FK_ItemPropertyValue" Association="Item.Store.FK_ItemPropertyValue">
+      <End Role="Items" EntitySet="Items" />
+      <End Role="ParameterValues" EntitySet="ParameterValues" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ParameterCurrentParametersSchema" Association="Item.Store.FK_ParameterCurrentParametersSchema">
+      <End Role="Parameters" EntitySet="Parameters" />
+      <End Role="CurrentParametersSchema" EntitySet="CurrentParametersSchema" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ParameterParameterValue" Association="Item.Store.FK_ParameterParameterValue">
+      <End Role="Parameters" EntitySet="Parameters" />
+      <End Role="ParameterValues" EntitySet="ParameterValues" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="CurrentParametersSchema">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="ParameterId" Type="bigint" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Items">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="Number" Type="bigint" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Price" Type="decimal" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Parameters">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Type" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="ParameterValues">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="uniqueidentifier" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="Value" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="ItemId" Type="bigint" Nullable="false" />
+    <Property Name="ParameterId" Type="bigint" Nullable="false" />
+  </EntityType>
+  <Association Name="FK_ItemPropertyValue">
+    <End Role="Items" Type="Item.Store.Items" Multiplicity="1" />
+    <End Role="ParameterValues" Type="Item.Store.ParameterValues" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Items">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="ParameterValues">
+        <PropertyRef Name="ItemId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ParameterCurrentParametersSchema">
+    <End Role="Parameters" Type="Item.Store.Parameters" Multiplicity="1" />
+    <End Role="CurrentParametersSchema" Type="Item.Store.CurrentParametersSchema" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Parameters">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="CurrentParametersSchema">
+        <PropertyRef Name="ParameterId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ParameterParameterValue">
+    <End Role="Parameters" Type="Item.Store.Parameters" Multiplicity="1" />
+    <End Role="ParameterValues" Type="Item.Store.ParameterValues" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Parameters">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="ParameterValues">
+        <PropertyRef Name="ParameterId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <!--Errors Found During Generation:
+      warning 6005: The function 'sp_GetAccountingReport' has a parameter 'ParameterIds' at parameter index 0 that has a data type 'table type' which is currently not supported for the target .NET Framework version. The function was excluded.
+      
+      <Function Name="sp_GetAccountingReport" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />-->
+</Schema>
